@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Projekt</string>
+    <string name="app_name">W.T.E.</string>
+    <string name="appLongName">Where To Eat?</string>
+    <string name="logo">Logo</string>
+
+    <string name="titleTextView">Title</string>
+    <string name="addressTextView">Address: </string>
+    <string name="placeHolderImageView">Image</string>
+    <string name="priceTextView">Price: </string>
+    <string name="favouriteImageButton">Favourite Button</string>
 </resources>
