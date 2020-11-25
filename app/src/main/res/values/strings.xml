@@ -9,4 +9,8 @@
     <string name="priceTextView">Price: </string>
     <string name="favouriteImageButton">Favourite Button</string>
     <string name="search">Search</string>
+
+    <string name="addImageButton">Add Image</string>
+    <string name="deleteImageButton">Delete Image</string>
+    <string name="callButton">Call</string>
 </resources>
