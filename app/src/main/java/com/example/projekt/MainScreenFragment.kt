@@ -14,6 +14,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
 
     private val locationPermissionRequestCode = 1
     private lateinit var googleMap: GoogleMap
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +49,8 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
     override fun onResume() {
         super.onResume()
 
+        navController = findNavController()
+
         dataSet.add(RestaurantData("alma", "asd", "12"))
         dataSet.add(RestaurantData("korte", "qwe", "121"))
         dataSet.add(RestaurantData("szilva", "zxc", "122"))
@@ -58,14 +62,21 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = adapter
 
-        val mapFragment = parentFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
+        val mapFragment =
+            parentFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-
         inflater.inflate(R.menu.search_menu, menu)
+
+        val profile: MenuItem = menu.findItem(R.id.profileButton)
+        profile.setOnMenuItemClickListener{
+            navController.navigate(R.id.action_mainScreenFragment_to_profileScreenFragment)
+            return@setOnMenuItemClickListener true
+        }
+
         val search: MenuItem = menu.findItem(R.id.searchButton)
         val searchView: SearchView = search.actionView as SearchView
         searchView.imeOptions = EditorInfo.IME_ACTION_DONE
