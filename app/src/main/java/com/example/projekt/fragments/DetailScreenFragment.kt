@@ -1,101 +1,44 @@
-package com.example.projekt
+package com.example.projekt.fragments
 
 import android.Manifest
-import android.content.Context.LOCATION_SERVICE
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.view.*
-import android.view.inputmethod.EditorInfo
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.projekt.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 
-class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListener,
-    OnMapReadyCallback,
+class DetailScreenFragment : Fragment(), OnMapReadyCallback,
     GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener,
-    ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
+    ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private val dataSet = arrayListOf<RestaurantData>()
-    private lateinit var adapter: RecyclerViewFeedAdapter
-
-    private val locationPermissionRequestCode = 1
     private lateinit var googleMap: GoogleMap
-    private lateinit var navController: NavController
+    private val locationPermissionRequestCode = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_screen, container, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        navController = findNavController()
-
-        dataSet.add(RestaurantData("alma", "asd", "12"))
-        dataSet.add(RestaurantData("korte", "qwe", "121"))
-        dataSet.add(RestaurantData("szilva", "zxc", "122"))
-        dataSet.add(RestaurantData("barack", "xyz", "123"))
-        dataSet.add(RestaurantData("palinka", "sad", "124"))
-
-        adapter = RecyclerViewFeedAdapter(dataSet, this)
-        val recyclerView = activity?.findViewById<RecyclerView>(R.id.feedRecyclerView)
-        recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.adapter = adapter
 
         val mapFragment =
-            parentFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
+            activity?.supportFragmentManager?.findFragmentById(R.id.mapView) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.search_menu, menu)
-
-        val profile: MenuItem = menu.findItem(R.id.profileButton)
-        profile.setOnMenuItemClickListener{
-            navController.navigate(R.id.action_mainScreenFragment_to_profileScreenFragment)
-            return@setOnMenuItemClickListener true
-        }
-
-        val search: MenuItem = menu.findItem(R.id.searchButton)
-        val searchView: SearchView = search.actionView as SearchView
-        searchView.imeOptions = EditorInfo.IME_ACTION_DONE
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                adapter.filter.filter(newText)
-                return false
-            }
-        })
-    }
-
-    override fun onItemClick(position: Int) {
-        val navController = findNavController()
-        navController.navigate(R.id.action_mainScreenFragment_to_detailScreenFragment)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_detail_screen, container, false)
     }
 
     override fun onMapReady(mMap: GoogleMap) {
@@ -125,7 +68,7 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
         googleMap.setOnMyLocationClickListener(this)
 
         val locationManager =
-            requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val criteria = Criteria()
         val provider = locationManager.getBestProvider(criteria, true) ?: return
         val location = locationManager.getLastKnownLocation(provider)
@@ -159,7 +102,6 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
         }
     }
 
-
     override fun onMyLocationButtonClick(): Boolean {
         Toast.makeText(activity, "MyLocation button clicked", Toast.LENGTH_SHORT).show()
         // Return false so that we don't consume the event and the default behavior still occurs
@@ -169,9 +111,5 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
 
     override fun onMyLocationClick(location: Location) {
         Toast.makeText(activity, "Current location: $location", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onMarkerClick(p0: Marker?): Boolean {
-        return false
     }
 }

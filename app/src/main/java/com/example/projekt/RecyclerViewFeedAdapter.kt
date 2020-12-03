@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.projekt.data.RestaurantData
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -46,8 +48,12 @@ class RecyclerViewFeedAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.restaurantName.text = filterList[position].getName()
         viewHolder.restaurantAddress.text = "Address: " + filterList[position].getAddress()
-
+        Glide.with(viewHolder.restaurantImage).load(filterList[position].getImage())
+            .into(viewHolder.restaurantImage)
         viewHolder.restaurantPrice.text = "Price: " + filterList[position].getPrice()
+        if (filterList[position].getFavourite()) {
+            viewHolder.restaurantFavouriteButton.setBackgroundResource(R.drawable.favorite)
+        }
     }
 
     override fun getItemCount(): Int {

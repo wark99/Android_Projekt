@@ -1,4 +1,4 @@
-package com.example.projekt
+package com.example.projekt.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -12,6 +12,8 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projekt.R
+import com.example.projekt.RecyclerViewFavouriteAdapter
 
 class ProfileScreenFragment : Fragment() {
 
