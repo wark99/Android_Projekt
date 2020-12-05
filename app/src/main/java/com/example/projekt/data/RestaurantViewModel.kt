@@ -14,7 +14,7 @@ class RestaurantViewModel(private val repository: RestaurantRepository) : ViewMo
         repository.insert(restaurant)
     }
 
-    fun deleteAll()=viewModelScope.launch {
+    fun deleteAll() = viewModelScope.launch {
         repository.deleteAll()
     }
 }

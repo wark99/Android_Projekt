@@ -43,7 +43,7 @@ class SplashScreenFragment : Fragment() {
                 call: Call<BEData>,
                 response: Response<BEData>
             ) {
-                Log.d("Retrofit", response.body()!!.restaurants.toString())
+                //Log.d("Retrofit", response.body()!!.restaurants.toString())
                 //restaurantViewModel.deleteAll()
                 for (item in response.body()!!.restaurants) {
                     //Toast.makeText(this@MainActivity, "Added", Toast.LENGTH_LONG).show()
@@ -72,7 +72,7 @@ class SplashScreenFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<BEData>, t: Throwable) {
-                Log.d("Retrofit", "Nincs")
+                //Log.d("Retrofit", "Nincs")
             }
         })
     }

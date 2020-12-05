@@ -17,7 +17,7 @@ class RecyclerViewFeedAdapter(
 ) :
     RecyclerView.Adapter<RecyclerViewFeedAdapter.ViewHolder>(), Filterable {
 
-    private val filterList = ArrayList(dataSet)
+    val filterList = ArrayList(dataSet)
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val restaurantName: TextView = view.findViewById(R.id.titleTextView)
@@ -52,7 +52,7 @@ class RecyclerViewFeedAdapter(
             .into(viewHolder.restaurantImage)
         viewHolder.restaurantPrice.text = "Price: " + filterList[position].getPrice()
         if (filterList[position].getFavourite()) {
-            viewHolder.restaurantFavouriteButton.setBackgroundResource(R.drawable.favorite)
+            viewHolder.restaurantFavouriteButton.setImageResource(R.drawable.favorite)
         }
     }
 
@@ -77,6 +77,7 @@ class RecyclerViewFeedAdapter(
                         if (item.getName().toLowerCase(Locale.ROOT).startsWith(filterPattern)) {
                             filteredList.add(item)
                         }
+
                     }
                 }
 

@@ -15,7 +15,8 @@ class RestaurantsData(
     val price: Double,
     val reserve_url: String,
     val mobile_reserve_url: String,
-    val image_url: String
+    val image_url: String,
+    val favourite: Boolean
 ) {
     override fun toString(): String {
         return "\n" + id.toString() + "\n" + name + "\n" + address + "\n" + city + "\n" + state + "\n" + area + "\n" + postal_code + "\n" + country + "\n" + phone + "\n" + lat.toString() + "\n" + lng.toString() + "\n" + price.toString() + "\n" + reserve_url + "\n" + mobile_reserve_url + "\n" + image_url + "\n\n"

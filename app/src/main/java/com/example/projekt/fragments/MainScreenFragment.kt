@@ -3,9 +3,10 @@ package com.example.projekt.fragments
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,8 +18,12 @@ import com.example.projekt.data.*
 
 class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListener, DataListener {
 
-    private val restaurantViewModel: RestaurantViewModel by viewModels {
+    private val restaurantViewModel: RestaurantViewModel by activityViewModels() {
         RestaurantViewModelFactory((requireActivity().application as RestaurantApplication).repository)
+    }
+
+    private val singleRestaurantViewModel: SingleRestaurantViewModel by activityViewModels() {
+        SingleRestaurantViewModelFactory()
     }
 
     private lateinit var navController: NavController
@@ -34,16 +39,29 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
 
         restaurantViewModel.allRestaurants.observe(viewLifecycleOwner) { restaurant ->
             restaurant.let {
+                var id: Int = 0
                 for (element in it) {
                     dataSet.add(
                         RestaurantData(
+                            id,
                             element.name,
                             element.address,
-                            element.image_url,
+                            element.city,
+                            element.state,
+                            element.area,
+                            element.postal_code,
+                            element.country,
+                            element.phone,
+                            element.lat,
+                            element.lng,
                             element.price.toString(),
+                            element.reserve_url,
+                            element.mobile_reserve_url,
+                            element.image_url,
                             false
                         )
                     )
+                    id++
                 }
                 onDataReady()
             }
@@ -64,6 +82,9 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
         super.onResume()
 
         navController = findNavController()
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finishAffinity()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -93,6 +114,9 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
     }
 
     override fun onItemClick(position: Int) {
+        val item = adapter.filterList[position]
+        dataSet.clear()
+        singleRestaurantViewModel.selectedItem(item)
         val navController = findNavController()
         navController.navigate(R.id.action_mainScreenFragment_to_detailScreenFragment)
     }
