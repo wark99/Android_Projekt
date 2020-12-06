@@ -9,30 +9,29 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Restaurant::class], version = 4)
-abstract class RestaurantRoomDatabase : RoomDatabase() {
+@Database(entities = [Profile::class], version = 1)
+abstract class ProfileRoomDatabase : RoomDatabase() {
 
-    abstract fun restaurantDao(): RestaurantDao
+    abstract fun profileDao(): ProfileDao
 
     companion object {
         @Volatile
-        private var INSTANCE: RestaurantRoomDatabase? = null
+        private var INSTANCE: ProfileRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): RestaurantRoomDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope): ProfileRoomDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    RestaurantRoomDatabase::class.java,
-                    "restaurant_database"
-                ).fallbackToDestructiveMigration()
-                    .addCallback(RestaurantDatabaseCallback(scope))
+                    ProfileRoomDatabase::class.java,
+                    "profile_databse"
+                ).fallbackToDestructiveMigration().addCallback(ProfileRoomDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
 
-        private class RestaurantDatabaseCallback(private val scope: CoroutineScope) :
+        private class ProfileRoomDatabaseCallback(private val scope: CoroutineScope) :
             RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)

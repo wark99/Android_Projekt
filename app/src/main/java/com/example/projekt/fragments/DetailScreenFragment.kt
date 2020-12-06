@@ -23,10 +23,8 @@ import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.example.projekt.PermissionUtils
 import com.example.projekt.R
-import com.example.projekt.data.DataListener
-import com.example.projekt.data.RestaurantData
-import com.example.projekt.data.SingleRestaurantViewModel
-import com.example.projekt.data.SingleRestaurantViewModelFactory
+import com.example.projekt.RestaurantApplication
+import com.example.projekt.data.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -46,8 +44,13 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
 
     private lateinit var myLocation: Location
 
+    private val restaurantViewModel: RestaurantViewModel by activityViewModels() {
+        RestaurantViewModelFactory((requireActivity().application as RestaurantApplication).repository)
+    }
+    private val dataSet = arrayListOf<RestaurantData>()
+
     private val singleRestaurantViewModel: SingleRestaurantViewModel by activityViewModels() {
-        SingleRestaurantViewModelFactory()
+        SingleRestaurantViewModelFactory((requireActivity().application as RestaurantApplication).repository)
     }
 
     private lateinit var restaurantData: RestaurantData
@@ -74,6 +77,33 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
+
+        restaurantViewModel.allRestaurants.observe(viewLifecycleOwner) { restaurant ->
+            restaurant.let {
+                for ((id, element) in it.withIndex()) {
+                    dataSet.add(
+                        RestaurantData(
+                            id,
+                            element.name,
+                            element.address,
+                            element.city,
+                            element.state,
+                            element.area,
+                            element.postal_code,
+                            element.country,
+                            element.phone,
+                            element.lat,
+                            element.lng,
+                            element.price.toString(),
+                            element.reserve_url,
+                            element.mobile_reserve_url,
+                            element.image_url,
+                            element.favourite
+                        )
+                    )
+                }
+            }
+        }
 
         return view
     }
@@ -113,11 +143,20 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
         }
 
         restaurantFavourite.setOnClickListener {
-            if (!restaurantData.getFavourite()) {
-                restaurantFavourite.setImageResource(R.drawable.favorite)
-            } else {
-                restaurantFavourite.setImageResource(R.drawable.favorite_border)
-            }
+            restaurantData.setFavourite(!restaurantData.getFavourite())
+            restaurantViewModel.updateFavourite(
+                restaurantData.getId(),
+                restaurantData.getFavourite(),
+                object : DataListener {
+                    override fun onDataReady() {
+                        if (restaurantData.getFavourite()) {
+                            restaurantFavourite.setImageResource(R.drawable.favorite)
+                        } else {
+                            restaurantFavourite.setImageResource(R.drawable.favorite_border)
+                        }
+
+                    }
+                })
         }
 
         addImage.setOnClickListener {
@@ -182,9 +221,16 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        imageSet = true
         if (resultCode == Activity.RESULT_OK && requestCode == pickImage) {
-            Glide.with(restaurantImage).load(data?.data).into(restaurantImage)
+            restaurantViewModel.updateImage(
+                restaurantData.getId(),
+                data?.data.toString(),
+                object : DataListener {
+                    override fun onDataReady() {
+                        Glide.with(restaurantImage).load(data?.data).into(restaurantImage)
+                        imageSet = true
+                    }
+                })
         }
     }
 

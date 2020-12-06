@@ -1,11 +1,12 @@
 package com.example.projekt.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.projekt.R
@@ -23,10 +24,24 @@ class SplashScreenFragment : Fragment() {
         RestaurantViewModelFactory((requireActivity().application as RestaurantApplication).repository)
     }
 
+    private val profileViewModel: ProfileViewModel by activityViewModels() {
+        ProfileViewModelFactory((requireActivity().application as RestaurantApplication).profileRepository)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        profileViewModel.insertProfile(
+            Profile(
+                "",
+                "Profile",
+                "address",
+                "number",
+                "mail"
+            )
+        )
+        //restaurantViewModel.deleteAll()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_splash_screen, container, false)
     }
@@ -43,12 +58,10 @@ class SplashScreenFragment : Fragment() {
                 call: Call<BEData>,
                 response: Response<BEData>
             ) {
-                //Log.d("Retrofit", response.body()!!.restaurants.toString())
-                //restaurantViewModel.deleteAll()
                 for (item in response.body()!!.restaurants) {
-                    //Toast.makeText(this@MainActivity, "Added", Toast.LENGTH_LONG).show()
                     restaurantViewModel.insert(
                         Restaurant(
+                            0,
                             item.name,
                             item.address,
                             item.city,
@@ -62,7 +75,8 @@ class SplashScreenFragment : Fragment() {
                             item.price,
                             item.reserve_url,
                             item.mobile_reserve_url,
-                            item.image_url
+                            item.image_url,
+                            false
                         )
                     )
                 }
@@ -72,7 +86,8 @@ class SplashScreenFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<BEData>, t: Throwable) {
-                //Log.d("Retrofit", "Nincs")
+                Toast.makeText(requireContext(), "Error!", Toast.LENGTH_LONG).show()
+                requireActivity().finishAffinity()
             }
         })
     }

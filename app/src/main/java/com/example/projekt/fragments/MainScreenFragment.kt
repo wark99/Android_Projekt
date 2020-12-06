@@ -1,6 +1,7 @@
 package com.example.projekt.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
@@ -16,14 +17,15 @@ import com.example.projekt.RecyclerViewFeedAdapter
 import com.example.projekt.RestaurantApplication
 import com.example.projekt.data.*
 
-class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListener, DataListener {
+class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListener, DataListener,
+    RecyclerViewFeedAdapter.OnFavouriteClickListener {
 
     private val restaurantViewModel: RestaurantViewModel by activityViewModels() {
         RestaurantViewModelFactory((requireActivity().application as RestaurantApplication).repository)
     }
 
     private val singleRestaurantViewModel: SingleRestaurantViewModel by activityViewModels() {
-        SingleRestaurantViewModelFactory()
+        SingleRestaurantViewModelFactory((requireActivity().application as RestaurantApplication).repository)
     }
 
     private lateinit var navController: NavController
@@ -36,11 +38,15 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
+        getData()
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_main_screen, container, false)
+    }
 
+    private fun getData(){
         restaurantViewModel.allRestaurants.observe(viewLifecycleOwner) { restaurant ->
             restaurant.let {
-                var id: Int = 0
-                for (element in it) {
+                for ((id, element) in it.withIndex()) {
                     dataSet.add(
                         RestaurantData(
                             id,
@@ -58,21 +64,17 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
                             element.reserve_url,
                             element.mobile_reserve_url,
                             element.image_url,
-                            false
+                            element.favourite
                         )
                     )
-                    id++
                 }
                 onDataReady()
             }
         }
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_screen, container, false)
     }
 
     override fun onDataReady() {
-        adapter = RecyclerViewFeedAdapter(dataSet, this)
+        adapter = RecyclerViewFeedAdapter(dataSet, this, this)
         val recyclerView = activity?.findViewById<RecyclerView>(R.id.feedRecyclerView)
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = adapter
@@ -119,5 +121,15 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
         singleRestaurantViewModel.selectedItem(item)
         val navController = findNavController()
         navController.navigate(R.id.action_mainScreenFragment_to_detailScreenFragment)
+    }
+
+    override fun onFavouriteClick(position: Int) {
+        val item = adapter.filterList[position]
+        item.setFavourite(!item.getFavourite())
+        restaurantViewModel.updateFavourite(item.getId(), item.getFavourite(), object :DataListener{
+            override fun onDataReady() {
+                adapter.notifyDataSetChanged()
+            }
+        })
     }
 }

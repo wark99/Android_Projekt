@@ -19,6 +19,6 @@ class RestaurantsData(
     val favourite: Boolean
 ) {
     override fun toString(): String {
-        return "\n" + id.toString() + "\n" + name + "\n" + address + "\n" + city + "\n" + state + "\n" + area + "\n" + postal_code + "\n" + country + "\n" + phone + "\n" + lat.toString() + "\n" + lng.toString() + "\n" + price.toString() + "\n" + reserve_url + "\n" + mobile_reserve_url + "\n" + image_url + "\n\n"
+        return "\n" + id.toString() + "\n" + name + "\n" + address + "\n" + city + "\n" + state + "\n" + area + "\n" + postal_code + "\n" + country + "\n" + phone + "\n" + lat.toString() + "\n" + lng.toString() + "\n" + price.toString() + "\n" + reserve_url + "\n" + mobile_reserve_url + "\n" + image_url + "\n" + favourite + "\n\n"
     }
 }

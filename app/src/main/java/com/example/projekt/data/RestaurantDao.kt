@@ -17,4 +17,14 @@ interface RestaurantDao {
 
     @Query("DELETE FROM restaurants_table")
     suspend fun deleteAll()
+
+    @Query("UPDATE restaurants_table SET favourite=:newFavourite WHERE id=:newId")
+    suspend fun updateFavourite(newId: Int, newFavourite: Boolean, dataListener: DataListener) {
+        dataListener.onDataReady()
+    }
+
+    @Query("UPDATE restaurants_table SET image_url=:newImage WHERE id=:newId")
+    suspend fun updateImage(newId: Int, newImage: String, dataListener: DataListener) {
+        dataListener.onDataReady()
+    }
 }

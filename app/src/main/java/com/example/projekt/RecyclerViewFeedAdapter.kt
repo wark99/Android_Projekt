@@ -13,7 +13,8 @@ import kotlin.collections.ArrayList
 
 class RecyclerViewFeedAdapter(
     private var dataSet: ArrayList<RestaurantData>,
-    private val listener: OnItemClickListener
+    private val listener: OnItemClickListener,
+    private val favouriteClickListener: OnFavouriteClickListener
 ) :
     RecyclerView.Adapter<RecyclerViewFeedAdapter.ViewHolder>(), Filterable {
 
@@ -26,8 +27,15 @@ class RecyclerViewFeedAdapter(
         val restaurantPrice: TextView = view.findViewById(R.id.priceTextView)
         val restaurantFavouriteButton: ImageButton = view.findViewById(R.id.favouriteImageButton)
 
+
         init {
             view.setOnClickListener(this)
+            restaurantFavouriteButton.setOnClickListener {
+                val position: Int = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    favouriteClickListener.onFavouriteClick(position)
+                }
+            }
         }
 
         override fun onClick(view: View?) {
@@ -53,6 +61,8 @@ class RecyclerViewFeedAdapter(
         viewHolder.restaurantPrice.text = "Price: " + filterList[position].getPrice()
         if (filterList[position].getFavourite()) {
             viewHolder.restaurantFavouriteButton.setImageResource(R.drawable.favorite)
+        } else {
+            viewHolder.restaurantFavouriteButton.setImageResource(R.drawable.favorite_border)
         }
     }
 
@@ -62,6 +72,10 @@ class RecyclerViewFeedAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
+    }
+
+    interface OnFavouriteClickListener {
+        fun onFavouriteClick(position: Int)
     }
 
     override fun getFilter(): Filter {
@@ -88,6 +102,7 @@ class RecyclerViewFeedAdapter(
 
             override fun publishResults(charSequence: CharSequence?, result: FilterResults?) {
                 filterList.clear()
+                @Suppress("UNCHECKED_CAST")
                 filterList.addAll(result?.values as ArrayList<RestaurantData>)
                 notifyDataSetChanged()
             }

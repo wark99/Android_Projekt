@@ -17,6 +17,14 @@ class RestaurantViewModel(private val repository: RestaurantRepository) : ViewMo
     fun deleteAll() = viewModelScope.launch {
         repository.deleteAll()
     }
+
+    fun updateFavourite(id: Int, favourite: Boolean, dataListener: DataListener) = viewModelScope.launch {
+        repository.updateFavourite(id, favourite, dataListener)
+    }
+
+    fun updateImage(id: Int, image_url: String, dataListener: DataListener) = viewModelScope.launch {
+        repository.updateImage(id, image_url, dataListener)
+    }
 }
 
 class RestaurantViewModelFactory(private val repository: RestaurantRepository) :
