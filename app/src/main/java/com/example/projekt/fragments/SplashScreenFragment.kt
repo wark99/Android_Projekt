@@ -32,16 +32,17 @@ class SplashScreenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        profileViewModel.insertProfile(
-            Profile(
-                "",
-                "Profile",
-                "address",
-                "number",
-                "mail"
+        if (profileViewModel.profile.value == null) {
+            profileViewModel.insertProfile(
+                Profile(
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                )
             )
-        )
-        //restaurantViewModel.deleteAll()
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_splash_screen, container, false)
     }
@@ -49,8 +50,9 @@ class SplashScreenFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val retrofit = Retrofit.Builder().baseUrl("https://opentable.herokuapp.com/api/")
+        val retrofit = Retrofit.Builder().baseUrl("https://ratpark-api.imok.space/")
             .addConverterFactory(GsonConverterFactory.create()).build()
+
 
         val api = retrofit.create(ApiService::class.java)
         api.fetchData().enqueue(object : Callback<BEData> {
@@ -58,28 +60,31 @@ class SplashScreenFragment : Fragment() {
                 call: Call<BEData>,
                 response: Response<BEData>
             ) {
-                for (item in response.body()!!.restaurants) {
-                    restaurantViewModel.insert(
-                        Restaurant(
-                            0,
-                            item.name,
-                            item.address,
-                            item.city,
-                            item.state,
-                            item.area,
-                            item.postal_code,
-                            item.country,
-                            item.phone,
-                            item.lat,
-                            item.lng,
-                            item.price,
-                            item.reserve_url,
-                            item.mobile_reserve_url,
-                            item.image_url,
-                            false
+                if (restaurantViewModel.allRestaurants.value == null) {
+                    for (item in response.body()!!.restaurants) {
+                        restaurantViewModel.insert(
+                            Restaurant(
+                                0,
+                                item.name,
+                                item.address,
+                                item.city,
+                                item.state,
+                                item.area,
+                                item.postal_code,
+                                item.country,
+                                item.phone,
+                                item.lat,
+                                item.lng,
+                                item.price,
+                                item.reserve_url,
+                                item.mobile_reserve_url,
+                                item.image_url,
+                                false
+                            )
                         )
-                    )
+                    }
                 }
+                //restaurantViewModel.deleteAll()
 
                 val navController = findNavController()
                 navController.navigate(R.id.action_splashScreenFragment_to_mainScreenFragment)

@@ -47,6 +47,7 @@ class ProfileScreenFragment : Fragment(), DataListener, ProfileListener,
 
     private val pickImage = 100
     private var imageUri: Uri? = null
+    private var isImageSet = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,6 +79,18 @@ class ProfileScreenFragment : Fragment(), DataListener, ProfileListener,
         }
 
         profilePicture.setOnClickListener {
+            if(!isImageSet){
+                profileViewModel.deleteProfile()
+                profileViewModel.insertProfile(
+                    Profile(
+                        imageUri.toString(),
+                        profileName.text.toString(),
+                        profileAddress.text.toString(),
+                        profilePhone.text.toString(),
+                        profileMail.text.toString()
+                    )
+                )
+            }
             val picture = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(picture, pickImage)
         }
@@ -86,7 +99,7 @@ class ProfileScreenFragment : Fragment(), DataListener, ProfileListener,
             profileViewModel.deleteProfile()
             profileViewModel.insertProfile(
                 Profile(
-                    profilePicture.toString(),
+                    imageUri.toString(),
                     profileName.text.toString(),
                     profileAddress.text.toString(),
                     profilePhone.text.toString(),
@@ -138,8 +151,9 @@ class ProfileScreenFragment : Fragment(), DataListener, ProfileListener,
     }
 
     override fun onProfileReady() {
-        if (profile.avatar.isNotEmpty()) {
+        if (!isImageSet) {
             Glide.with(profilePicture).load(profile.avatar).into(profilePicture)
+            imageUri = Uri.parse(profile.avatar)
         }
         profileName.setText(profile.name)
         profileAddress.setText(profile.address)
@@ -151,8 +165,9 @@ class ProfileScreenFragment : Fragment(), DataListener, ProfileListener,
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
-            profilePicture.setImageURI(imageUri)
+            Glide.with(profilePicture).load(imageUri).into(profilePicture)
         }
+        isImageSet = true
     }
 
     override fun onFavouriteClick(position: Int) {

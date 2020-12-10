@@ -37,7 +37,7 @@ abstract class ProfileRoomDatabase : RoomDatabase() {
                 super.onCreate(db)
                 INSTANCE?.let {
                     scope.launch(Dispatchers.IO) {
-                        deleteAll()
+                        //deleteAll()
                     }
                 }
             }

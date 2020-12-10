@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("restaurants?name=a")
+    @GET("restaurants")
     fun fetchData(): Call<BEData>
 }
