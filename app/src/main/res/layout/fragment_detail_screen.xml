@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/DetailLaayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.DetailScreenFragment">
+
+    <TextView
+        android:id="@+id/detailTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mainMargin"
+        android:layout_marginTop="@dimen/mainMargin"
+        android:layout_marginEnd="@dimen/mainMargin"
+        android:text="@string/titleTextView"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/detailImageView"
+        app:layout_constraintEnd_toStartOf="@+id/detailFavouriteImageButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/detailFavouriteImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mainMargin"
+        android:layout_marginEnd="@dimen/mainMargin"
+        android:layout_marginBottom="@dimen/mainMargin"
+        android:contentDescription="@string/favouriteImageButton"
+        android:src="@drawable/favorite_border"
+        app:layout_constraintBottom_toTopOf="@+id/detailImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/detailTitleTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/detailImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/mainImageHeight"
+        android:layout_marginStart="@dimen/mainMargin"
+        android:layout_marginTop="@dimen/mainMargin"
+        android:layout_marginEnd="@dimen/mainMargin"
+        android:contentDescription="@string/placeHolderImageView"
+        android:scaleType="centerInside"
+        android:src="@drawable/foodporn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailTitleTextView" />
+
+    <TextView
+        android:id="@+id/detailAddressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mainMargin"
+        android:layout_marginTop="@dimen/mainMargin"
+        android:text="@string/addressTextView"
+        app:layout_constraintBottom_toTopOf="@+id/addImageButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailImageView" />
+
+    <TextView
+        android:id="@+id/detailPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mainMargin"
+        android:layout_marginEnd="@dimen/mainMargin"
+        android:text="@string/priceTextView"
+        app:layout_constraintBottom_toTopOf="@+id/deleteImageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailImageView" />
+
+    <Button
+        android:id="@+id/addImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mainMargin"
+        android:layout_marginTop="@dimen/mainMargin"
+        android:layout_marginBottom="@dimen/mainMargin"
+        android:text="@string/addImageButton"
+        app:layout_constraintBottom_toTopOf="@+id/mapView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailAddressTextView" />
+
+    <Button
+        android:id="@+id/deleteImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mainMargin"
+        android:layout_marginEnd="@dimen/mainMargin"
+        android:layout_marginBottom="@dimen/mainMargin"
+        android:text="@string/deleteImageButton"
+        app:layout_constraintBottom_toTopOf="@+id/mapView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailPriceTextView" />
+
+    <fragment
+        android:id="@+id/mapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/mainMargin"
+        android:layout_marginEnd="@dimen/mainMargin"
+        android:layout_marginBottom="@dimen/mainMargin"
+        app:layout_constraintBottom_toTopOf="@+id/callButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deleteImageButton" />
+
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mainMargin"
+        android:layout_marginEnd="@dimen/mainMargin"
+        android:layout_marginBottom="@dimen/mainMargin"
+        android:text="@string/callButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
