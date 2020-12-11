@@ -1,7 +1,6 @@
 package com.example.projekt.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
@@ -43,7 +42,7 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
         return inflater.inflate(R.layout.fragment_main_screen, container, false)
     }
 
-    private fun getData(){
+    private fun getData() {
         restaurantViewModel.allRestaurants.observe(viewLifecycleOwner) { restaurant ->
             restaurant.let {
                 for ((id, element) in it.withIndex()) {
@@ -126,10 +125,30 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
     override fun onFavouriteClick(position: Int) {
         val item = adapter.filterList[position]
         item.setFavourite(!item.getFavourite())
-        restaurantViewModel.updateFavourite(item.getId(), item.getFavourite(), object :DataListener{
-            override fun onDataReady() {
-                adapter.notifyDataSetChanged()
-            }
-        })
+        dataSet[position].setFavourite(item.getFavourite())
+        restaurantViewModel.deleteAll()
+        for (element in dataSet) {
+            restaurantViewModel.insert(
+                Restaurant(
+                    element.getId(),
+                    element.getName(),
+                    element.getAddress(),
+                    element.getCity(),
+                    element.getState(),
+                    element.getArea(),
+                    element.getPostalCode(),
+                    element.getCountry(),
+                    element.getPhone(),
+                    element.getLat(),
+                    element.getLng(),
+                    element.getPrice().toDouble(),
+                    element.getUrl(),
+                    element.getMobileUrl(),
+                    element.getImage(),
+                    element.getFavourite()
+                )
+            )
+        }
+        adapter.notifyDataSetChanged()
     }
 }

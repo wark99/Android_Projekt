@@ -164,9 +164,33 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
             startActivityForResult(picture, pickImage)
         }
         deleteImage.setOnClickListener {
-            imageSet = false
+            dataSet[restaurantData.getId()].setImage("https://www.opentable.com/img/restimages/116272.jpg")
+            restaurantViewModel.deleteAll()
+            for (element in dataSet) {
+                restaurantViewModel.insert(
+                    Restaurant(
+                        element.getId(),
+                        element.getName(),
+                        element.getAddress(),
+                        element.getCity(),
+                        element.getState(),
+                        element.getArea(),
+                        element.getPostalCode(),
+                        element.getCountry(),
+                        element.getPhone(),
+                        element.getLat(),
+                        element.getLng(),
+                        element.getPrice().toDouble(),
+                        element.getUrl(),
+                        element.getMobileUrl(),
+                        element.getImage(),
+                        element.getFavourite()
+                    )
+                )
+            }
             Glide.with(restaurantImage).load("https://www.opentable.com/img/restimages/116272.jpg")
                 .into(restaurantImage)
+            imageSet = false
         }
         callButton.setOnClickListener {
             checkPermission()
@@ -222,15 +246,33 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == pickImage) {
-            restaurantViewModel.updateImage(
-                restaurantData.getId(),
-                data?.data.toString(),
-                object : DataListener {
-                    override fun onDataReady() {
-                        Glide.with(restaurantImage).load(data?.data).into(restaurantImage)
-                        imageSet = true
-                    }
-                })
+
+            dataSet[restaurantData.getId()].setImage(data?.data.toString())
+            restaurantViewModel.deleteAll()
+            for (element in dataSet) {
+                restaurantViewModel.insert(
+                    Restaurant(
+                        element.getId(),
+                        element.getName(),
+                        element.getAddress(),
+                        element.getCity(),
+                        element.getState(),
+                        element.getArea(),
+                        element.getPostalCode(),
+                        element.getCountry(),
+                        element.getPhone(),
+                        element.getLat(),
+                        element.getLng(),
+                        element.getPrice().toDouble(),
+                        element.getUrl(),
+                        element.getMobileUrl(),
+                        element.getImage(),
+                        element.getFavourite()
+                    )
+                )
+            }
+            Glide.with(restaurantImage).load(data?.data).into(restaurantImage)
+            imageSet = true
         }
     }
 

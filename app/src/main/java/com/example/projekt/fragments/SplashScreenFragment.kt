@@ -64,7 +64,7 @@ class SplashScreenFragment : Fragment() {
                     for (item in response.body()!!.restaurants) {
                         restaurantViewModel.insert(
                             Restaurant(
-                                0,
+                                item.id,
                                 item.name,
                                 item.address,
                                 item.city,
@@ -79,7 +79,7 @@ class SplashScreenFragment : Fragment() {
                                 item.reserve_url,
                                 item.mobile_reserve_url,
                                 item.image_url,
-                                false
+                                item.favourite
                             )
                         )
                     }

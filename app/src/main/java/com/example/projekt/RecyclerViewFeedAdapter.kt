@@ -18,7 +18,7 @@ class RecyclerViewFeedAdapter(
 ) :
     RecyclerView.Adapter<RecyclerViewFeedAdapter.ViewHolder>(), Filterable {
 
-    val filterList = ArrayList(dataSet)
+    var filterList = ArrayList(dataSet)
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val restaurantName: TextView = view.findViewById(R.id.titleTextView)
