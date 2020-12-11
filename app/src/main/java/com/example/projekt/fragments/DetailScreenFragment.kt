@@ -80,6 +80,7 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
 
         restaurantViewModel.allRestaurants.observe(viewLifecycleOwner) { restaurant ->
             restaurant.let {
+                dataSet.clear()
                 for ((id, element) in it.withIndex()) {
                     dataSet.add(
                         RestaurantData(
@@ -144,6 +145,7 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
 
         restaurantFavourite.setOnClickListener {
             restaurantData.setFavourite(!restaurantData.getFavourite())
+
             restaurantViewModel.updateFavourite(
                 restaurantData.getId(),
                 restaurantData.getFavourite(),
@@ -154,9 +156,33 @@ class DetailScreenFragment : Fragment(), DataListener, OnMapReadyCallback,
                         } else {
                             restaurantFavourite.setImageResource(R.drawable.favorite_border)
                         }
-
                     }
                 })
+
+            /*restaurantViewModel.deleteAll()
+            restaurantViewModel.insert(Restaurant(
+                restaurantData.getId(),
+                restaurantData.getName(),
+                restaurantData.getAddress(),
+                restaurantData.getCity(),
+                restaurantData.getState(),
+                restaurantData.getArea(),
+                restaurantData.getPostalCode(),
+                restaurantData.getCountry(),
+                restaurantData.getPhone(),
+                restaurantData.getLat(),
+                restaurantData.getLng(),
+                restaurantData.getPrice().toDouble(),
+                restaurantData.getUrl(),
+                restaurantData.getMobileUrl(),
+                restaurantData.getImage(),
+                restaurantData.getFavourite()
+            ))
+            if (restaurantData.getFavourite()) {
+                restaurantFavourite.setImageResource(R.drawable.favorite)
+            } else {
+                restaurantFavourite.setImageResource(R.drawable.favorite_border)
+            }*/
         }
 
         addImage.setOnClickListener {

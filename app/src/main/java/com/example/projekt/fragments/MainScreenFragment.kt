@@ -45,6 +45,7 @@ class MainScreenFragment : Fragment(), RecyclerViewFeedAdapter.OnItemClickListen
     private fun getData() {
         restaurantViewModel.allRestaurants.observe(viewLifecycleOwner) { restaurant ->
             restaurant.let {
+                dataSet.clear()
                 for ((id, element) in it.withIndex()) {
                     dataSet.add(
                         RestaurantData(
