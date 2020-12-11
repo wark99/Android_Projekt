@@ -39,7 +39,7 @@
         android:layout_marginTop="@dimen/mainMargin"
         android:layout_marginEnd="@dimen/mainMargin"
         android:contentDescription="@string/placeHolderImageView"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@+id/priceTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +54,7 @@
         android:layout_marginTop="@dimen/mainMargin"
         android:layout_marginEnd="@dimen/mainMargin"
         android:text="@string/priceTextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/lineImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/placeHolderImageView" />
@@ -70,6 +70,19 @@
         app:layout_constraintBottom_toTopOf="@+id/placeHolderImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/star_off" />
+        app:srcCompat="@drawable/favorite_border" />
+
+    <ImageView
+        android:id="@+id/lineImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/lineImageView"
+        android:scaleType="center"
+        android:scaleX="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/priceTextView"
+        app:srcCompat="@drawable/line" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

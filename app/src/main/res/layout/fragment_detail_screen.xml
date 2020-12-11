@@ -5,7 +5,7 @@
     android:id="@+id/DetailLaayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailScreenFragment">
+    tools:context=".fragments.DetailScreenFragment">
 
     <TextView
         android:id="@+id/detailTitleTextView"
@@ -30,7 +30,7 @@
         android:layout_marginEnd="@dimen/mainMargin"
         android:layout_marginBottom="@dimen/mainMargin"
         android:contentDescription="@string/favouriteImageButton"
-        android:src="@android:drawable/star_off"
+        android:src="@drawable/favorite_border"
         app:layout_constraintBottom_toTopOf="@+id/detailImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/detailTitleTextView"
@@ -44,7 +44,7 @@
         android:layout_marginTop="@dimen/mainMargin"
         android:layout_marginEnd="@dimen/mainMargin"
         android:contentDescription="@string/placeHolderImageView"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:src="@drawable/foodporn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

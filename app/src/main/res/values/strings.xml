@@ -8,6 +8,7 @@
     <string name="placeHolderImageView">Image</string>
     <string name="priceTextView">Price: </string>
     <string name="favouriteImageButton">Favourite Button</string>
+    <string name="lineImageView">Line</string>
 
     <string name="search">Search</string>
     <string name="profile">Profile</string>

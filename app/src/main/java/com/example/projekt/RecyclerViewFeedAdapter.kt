@@ -6,16 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.projekt.data.RestaurantData
 import java.util.*
 import kotlin.collections.ArrayList
 
 class RecyclerViewFeedAdapter(
     private var dataSet: ArrayList<RestaurantData>,
-    private val listener: OnItemClickListener
+    private val listener: OnItemClickListener,
+    private val favouriteClickListener: OnFavouriteClickListener
 ) :
     RecyclerView.Adapter<RecyclerViewFeedAdapter.ViewHolder>(), Filterable {
 
-    private val filterList = ArrayList(dataSet)
+    var filterList = ArrayList(dataSet)
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val restaurantName: TextView = view.findViewById(R.id.titleTextView)
@@ -24,8 +27,15 @@ class RecyclerViewFeedAdapter(
         val restaurantPrice: TextView = view.findViewById(R.id.priceTextView)
         val restaurantFavouriteButton: ImageButton = view.findViewById(R.id.favouriteImageButton)
 
+
         init {
             view.setOnClickListener(this)
+            restaurantFavouriteButton.setOnClickListener {
+                val position: Int = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    favouriteClickListener.onFavouriteClick(position)
+                }
+            }
         }
 
         override fun onClick(view: View?) {
@@ -46,8 +56,14 @@ class RecyclerViewFeedAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.restaurantName.text = filterList[position].getName()
         viewHolder.restaurantAddress.text = "Address: " + filterList[position].getAddress()
-
+        Glide.with(viewHolder.restaurantImage).load(filterList[position].getImage())
+            .into(viewHolder.restaurantImage)
         viewHolder.restaurantPrice.text = "Price: " + filterList[position].getPrice()
+        if (filterList[position].getFavourite()) {
+            viewHolder.restaurantFavouriteButton.setImageResource(R.drawable.favorite)
+        } else {
+            viewHolder.restaurantFavouriteButton.setImageResource(R.drawable.favorite_border)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -56,6 +72,10 @@ class RecyclerViewFeedAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
+    }
+
+    interface OnFavouriteClickListener {
+        fun onFavouriteClick(position: Int)
     }
 
     override fun getFilter(): Filter {
@@ -71,6 +91,7 @@ class RecyclerViewFeedAdapter(
                         if (item.getName().toLowerCase(Locale.ROOT).startsWith(filterPattern)) {
                             filteredList.add(item)
                         }
+
                     }
                 }
 
@@ -81,6 +102,7 @@ class RecyclerViewFeedAdapter(
 
             override fun publishResults(charSequence: CharSequence?, result: FilterResults?) {
                 filterList.clear()
+                @Suppress("UNCHECKED_CAST")
                 filterList.addAll(result?.values as ArrayList<RestaurantData>)
                 notifyDataSetChanged()
             }
